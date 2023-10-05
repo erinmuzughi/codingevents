@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,23 +13,22 @@ import java.util.List;
 @Controller
 @RequestMapping("events")
 public class EventController {
+    private static List<String> events = new ArrayList<>();
     @GetMapping
     public String displayAllEvents(Model model) {
-        List<String> eventNames = new ArrayList<>();
-        eventNames.add("Pride");
-        eventNames.add("Turkey Run");
-        eventNames.add("Boo at the Zoo");
-
-        model.addAttribute("event", eventNames );
+        model.addAttribute("events", events);
         return "events/index";
 
     }
-
-    @PostMapping ()
 
     @GetMapping("create") //lives at /events/create
     public String renderCreateEventForm() {
         return "events/create";
     }
 
+    @PostMapping("create")
+    public String createEvent(@RequestParam String eventName) {
+        events.add(eventName);
+        return "redirect:/events"; //redirect them to the root path, which goes to the event handler above
+    }
 }
